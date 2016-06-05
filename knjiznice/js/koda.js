@@ -435,6 +435,17 @@ chart.on('draw', function(data) {//.ct-chart-donut barve
         // See http://gionkunz.github.io/chartist-js/api-documentation.html#chartistsvg-function-animate
         data.element.animate(animationDefinition, true);
     }
+    if (nivo == "premalo") {
+	$(".ct-slice-donut").css('stroke', 'red');
+    	
+    }else if (nivo == "podpovrečno") {
+	$(".ct-slice-donut").css('stroke', 'blue');
+    	
+    } else {
+	$(".ct-slice-donut").css('stroke', 'green');
+    	
+    } 
+    
 });
 }
 function premaloKisikaInfo() {
@@ -450,8 +461,24 @@ function premaloKisikaInfo() {
 		}
 }
 function narisiTelesnoTemperaturo() {
+	
 	var kokTemperature = $("#ttelesnatemperatura").val();
 	narisiZzahtevanoviz(kokTemperature);
+	if (kokTemperature > 40) {
+		$("#kTelesna").html("<p>"+"smrtno nevarno"+"</p>");
+	}else if (kokTemperature > 35 && kokTemperature <37) {	
+		$("#kTelesna").html("<p>"+"normalna temperatura"+"</p>");
+	}
+	else if(kokTemperature <= 35) {
+		$("#kTelesna").html("<p>"+"prenizka temperatura"+"</p>");
+	}
+	else if(kokTemperature >= 37 && kokTemperature <= 40) {
+		$("#kTelesna").html("<p>"+"previsoka temperatura"+"</p>");
+	}
+	else {
+		
+	}
+	
 }
  function izpolniTextbox(ime,priimek,datumRojstva,telesnaTemperatura,nasicenostKrvni) {
     		$("#time").val(ime);
@@ -488,6 +515,7 @@ function narisiTelesnoTemperaturo() {
  }
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
 $(document).ready(function() {
+	
 // narisiKrivuljo();
 	$("#nivoKisika").html("(Pokaži) kakšen je normalen nivo kisika");
 	$("#master-detail").html("<p>Hypoxemia is a below-normal level of oxygen in your blood, specifically in the arteries. Hypoxemia is a sign of a problem related to breathing or circulation, and may result in various symptoms, such as shortness of breath. Hypoxemia is determined by measuring the oxygen level in a blood sample taken from an artery (arterial blood gas). It can also be estimated by measuring the oxygen saturation of your blood using a pulse oximeter — a small device that clips to your finger. Normal arterial oxygen is approximately 75 to 100 millimeters of mercury (mm Hg). Values under 60 mm Hg usually indicate the need for supplemental oxygen. Normal pulse oximeter readings usually range from 95 to 100 percent. Values under 90 percent are considered low.</p>");
