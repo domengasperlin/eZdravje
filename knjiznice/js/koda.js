@@ -41,13 +41,34 @@ function generirajPodatke(stPacienta) {
 
 
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
+function Bar(query, data, options, responsiveOptions) { //uselessssssssssssssssssssssssssssssssssss
+  Chartist.Bar.super.constructor.call(this,
+    query,
+    data,
+    defaultOptions,
+    Chartist.extend({}, defaultOptions, options),
+    responsiveOptions);
+}
+
+
 
 
 $( document ).ready(function() {
- 
+ // Creating bar chart type in Chartist namespace
+
+
+
+
+// In the global name space Chartist we call the Bar function to initialize a bar chart. As a first parameter we pass in a selector where we would like to get our chart created and as a second parameter we pass our data object.
+new Chartist.Bar('.ct-chart', data);
+
+
+
+
 // Create a new line chart object where as first parameter we pass in a selector
 // that is resolving to our chart container element. The Second parameter
 // is the actual data object. As a third parameter we pass in our custom options.
+/* TAle spodi graf je kul
 new Chartist.Line('.ct-chart', {
   labels: [0,'27','40','50',60,95,100],
   series: [
@@ -58,5 +79,5 @@ new Chartist.Line('.ct-chart', {
   chartPadding: {
     right: 40
   }
-});
+}); */
 });
