@@ -20,8 +20,65 @@ function getSessionId() {
     });
     return response.responseJSON.sessionId;
 }
+function temperaturaIzBaze(ehrId, sessionId) {
+    var meritve;
+    $.ajax({
+        url: baseUrl + "/view/" + ehrId + "/body_temperature",
+        type: 'GET',
+        async: false,
+        headers: {"Ehr-Session": sessionId},
+        success: function (res) {
+            for (var i in res) {
+                meritve = res;
+            }
+        }
+    });
+    return meritve;
+}
+function preberiEHRodBolnika() {
+	var sessionId = getSessionId();
 
+	var ehrId = $("#tehrid").val();
 
+	if (!ehrId || ehrId.trim().length == 0) {
+		console.log("prazno polje");
+	
+	} else {
+		$.ajax({
+			url: baseUrl + "/demographics/ehr/" + ehrId + "/party",
+			type: 'GET',
+			headers: {"Ehr-Session": sessionId},
+	    	success: function (data) {
+				var party = data.party;
+				$("#preberiSporocilo").html("<span class='obvestilo label " +
+          "label-success fade-in'>Bolnik '" + party.firstNames + " " +
+          party.lastNames + "', ki se je rodil '" + party.dateOfBirth +
+          "'.</span>");
+			},
+			error: function(err) {
+				$("#preberiSporocilo").html("<span class='obvestilo label " +
+          "label-danger fade-in'>Napaka '" +
+          JSON.parse(err.responseText).userMessage + "'!");
+			}
+		});
+		var tempera;
+    $.ajax({
+        url: baseUrl + "/view/" + ehrId + "/body_temperature",
+        type: 'GET',
+        async: false,
+        headers: {"Ehr-Session": sessionId},
+        success: function (res) {
+            for (var i in res) {
+                tempera = res;
+            }
+            
+        }
+        
+    });
+   
+    return tempera;
+	}
+}
 
 /**
  * Generator podatkov za novega pacienta, ki bo uporabljal aplikacijo. Pri
@@ -31,45 +88,166 @@ function getSessionId() {
  * @param stPacienta zaporedna številka pacienta (1, 2 ali 3)
  * @return ehrId generiranega pacienta
  */
+ function izpolniTextbox(ime,priimek,datumRojstva,telesnaTemperatura,nasicenostKrvni) {
+    		$("#time").val(ime);
+            $("#tpriimek").val(priimek);
+            $("#tdatumrojstva").val(datumRojstva);
+            $("#ttelesnatemperatura").val(telesnaTemperatura);
+            $("#tnasicenostkrvi").val(nasicenostKrvni);
+ }
+ function generirajZelotkota() {
+	var ime = "Zelotko";
+	var priimek = "Bolan";
+	var datumRojstva = "1975-03-03T01:30";
+	var telesnaTemperatura = "39";
+	var nasicenostKrvni = 97;
+	izpolniTextbox(ime,priimek,datumRojstva,telesnaTemperatura,nasicenostKrvni);
+ }
+ function generirajBoba() {
+	var ime = "Sportnik";
+	var priimek = "Bob";
+	var datumRojstva = "1980-10-13T20:61";
+	var telesnaTemperatura = "36";
+	var nasicenostKrvni = 100;
+	izpolniTextbox(ime,priimek,datumRojstva,telesnaTemperatura,nasicenostKrvni);
+ }
+ function generirajMicko() {
+	var ime = "Micka";
+	var priimek = "Starina";
+	var datumRojstva = "1948-4-11T02:58";
+	var telesnaTemperatura = "37";
+	var nasicenostKrvni = 98;
+	izpolniTextbox(ime,priimek,datumRojstva,telesnaTemperatura,nasicenostKrvni);
+ }
+ var string = "";
+function generateAll() {
+	
+	for (var stevec = 1; stevec <= 3; stevec++) {
+		var trenutniId = generirajPodatke(stevec);
+//		string += "<h3><span class='label label-default'>"+trenutniId+"</span></h3><br>";
+	//	console.log("AJS: "+trenutniId);
+	}
+//$("#Ehrajdi").html(string);
+	//----------------------------------------------------------------------------->fix
+	
+	
+
+/*	 $("#tpriimek").val("");
+            $("#tdatumrojstva").val("");
+            $("#ttelesnatemperatura").val("");
+            $("#tnasicenostkrvi").val("");*/
+}
+
 function generirajPodatke(stPacienta) {
-  ehrId = "";
-
-  // TODO: Potrebno implementirati
-
-  return ehrId;
+	ehrId = "";
+	sessionId = getSessionId();
+	var ime = "";
+	var priimek = "";
+	var datumRojstva = "";
+	var telesnaTemperatura = "";
+	var nasicenostKrvni = 0;
+  switch (stPacienta) {
+    case 1:
+		ime = "Zelotko"
+		priimek = "Bolan";
+		datumRojstva = "1975-03-03T01:30";
+		telesnaTemperatura = "39";
+		nasicenostKrvni = 97;
+		generirajZelotkota();
+        break;
+    case 2:
+        ime = "Sportnik";
+        priimek = "Bob";
+        datumRojstva = "1975-03-03T01:30";
+        telesnaTemperatura = "36";
+        nasicenostKrvni = 99;
+        generirajBoba();
+        break;
+    case 3:
+        ime = "Micka";
+        priimek = "Starina";
+        datumRojstva = "1948-4-11T10:58";
+        telesnaTemperatura = "37";
+        nasicenostKrvni = 98;
+        generirajMicko();
+        break;
+        
+  }
+$.ajaxSetup({
+		    headers: {"Ehr-Session": sessionId}
+		});
+		$.ajax({
+		    url: baseUrl + "/ehr",
+		    type: 'POST',
+		    success: function (data) {
+		        var ehrId = data.ehrId;
+		        var partyData = {
+		            firstNames: ime,
+		            lastNames: priimek,
+		            dateOfBirth: datumRojstva,
+		            partyAdditionalInfo: [{key: "ehrId", value: ehrId}]
+		        };
+		        $.ajax({
+		            url: baseUrl + "/demographics/party",
+		            type: 'POST',
+		            contentType: 'application/json',
+		            data: JSON.stringify(partyData),
+		            success: function (party) {
+		                if (party.action == 'CREATE') {
+		                	console.log("uspešno "+ehrId);
+							string += "<h5><br><span class='label label-default'>"+ehrId+"</span></h5>";
+							$("#Ehrajdi").html(string);
+							
+							
+		                	
+		               $("#meritveVitalnihZnakovEHRid").val(ehrId);
+		                }
+		            },
+		            error: function(err) {
+		            	console.log("neuspešno "+JSON.parse(err.responseText).userMessage);
+		            }
+		            
+		        });
+		    }
+		    
+		});
+		                return ehrId;
+		
 }
 
 
-// TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
-function Bar(query, data, options, responsiveOptions) { //uselessssssssssssssssssssssssssssssssssss
-  Chartist.Bar.super.constructor.call(this,
-    query,
-    data,
-    defaultOptions,
-    Chartist.extend({}, defaultOptions, options),
-    responsiveOptions);
+    
+function preberiEHRzapis() {
+	sessionId = getSessionId();
+
+	var ehrId = $("#tehrid").val();
+
+	if (!ehrId || ehrId.trim().length == 0) {
+		console.log("vnesi zahtevan podatek");
+	} else {
+		$.ajax({
+			url: baseUrl + "/demographics/ehr/" + ehrId + "/party",
+			type: 'GET',
+			headers: {"Ehr-Session": sessionId},
+	    	success: function (data) {
+				var party = data.party;
+				console.log("bolnik " +party.firstNames+" "+party.lastNames+" "+party.dateOfBirth);
+				izpolniTextbox(party.firstNames,party.lastNames,party.dateOfBirth,0,0);
+			},
+			error: function(err) {
+				console.log("Branje sporočil ni bilo uspešno "+ JSON.parse(err.responseText).userMessage);
+			}
+		});
+	}
 }
 
 
 
+//GENERIRANJE PODATKOV
 
-$( document ).ready(function() {
- // Creating bar chart type in Chartist namespace
-
-
-
-
-// In the global name space Chartist we call the Bar function to initialize a bar chart. As a first parameter we pass in a selector where we would like to get our chart created and as a second parameter we pass our data object.
-new Chartist.Bar('.ct-chart', data);
-
-
-
-
-// Create a new line chart object where as first parameter we pass in a selector
-// that is resolving to our chart container element. The Second parameter
-// is the actual data object. As a third parameter we pass in our custom options.
-/* TAle spodi graf je kul
-new Chartist.Line('.ct-chart', {
+function narisiKrivuljo() {
+	
+	new Chartist.Line('.ct-chart', {
   labels: [0,'27','40','50',60,95,100],
   series: [
     [0,50,75,89,97,92,97],
@@ -79,5 +257,13 @@ new Chartist.Line('.ct-chart', {
   chartPadding: {
     right: 40
   }
-}); */
+});
+}
+// TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
+$( document ).ready(function() {
+ narisiKrivuljo();
+// Create a new line chart object where as first parameter we pass in a selector
+// that is resolving to our chart container element. The Second parameter
+// is the actual data object. As a third parameter we pass in our custom options.
+
 });

@@ -31,7 +31,7 @@
         <ul class="nav navbar-nav">
           <li><a href="opis.html">Opis ideje</a></li>
           <li><a href="nacrt.html">Načrt informacijske rešitve</a></li>
-          <li><a href="#">Generiranje podatkov</a></li>
+          <li><a onclick="generateAll()">Generiranje podatkov</a></li>
         </ul>
       </div>
     </div>
@@ -40,22 +40,44 @@
 
   <!-- ZAČETEK: Vsebina aplikacije -->
   
+    <div class="container">
+
+  
+                                       
+  <div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Generiranje Uporabnika
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <li><a onclick="generirajPodatke(1)">Zelotko Bolan</a></li>
+      <li><a onclick="generirajPodatke(2)">Sportnik Bob</a></li>
+      <li><a onclick="generirajPodatke(3)">Starka Micka</a></li>
+    </ul>
+  </div>
+</div>
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
         <p class="lead">Vaša kri odraža trenutno zdravstveno stanje, hvala za vaše zaupanje</p>
+        
+
+        
         <div class="panel-body">
-						<span class="label label-default">Ime</span><input id="time" type="text" class="form-control input-mini" placeholder="Osama">
-						<span class="label label-default">Priimek</span><input id="tpriimek" type="text" class="form-control" placeholder="Bin Laden">
-						<span class="label label-default">Datum rojstva</span><input id="tdatumrojstva" type="text" class="form-control" placeholder="1957-03-10T09:08">
-						<span class="label label-default">Telesna temperatura</span><div class="input-group"><input id="ttelesnatemperatura" type="text" class="form-control input-mini" placeholder="36.50"><span class="input-group-addon">°C</span></div>
-						<span class="label label-default">Nasičenost krvi s kisikom</span><div class="input-group"><input id="tnasicenostkrvi" type="text" class="form-control input-mini" placeholder="98"><span class="input-group-addon">%</span></div>
-						<button type="button" class="btn btn-primary btn-xs" onclick="kreirajEHRzaBolnika()">Dodaj v bazo</button><span id="ustvariSporocilo"></span>
+						<span class="label label-default">Ime</span><input id="time" type="text" class="form-control input-mini">
+						<span class="label label-default">Priimek</span><input id="tpriimek" type="text" class="form-control">
+						<span class="label label-default">Datum rojstva</span><input id="tdatumrojstva" type="text" class="form-control"> <!-- placeholder="1957-03-10T09:08">//1917-04-10T10:09 -->
+						<span class="label label-default">Telesna temperatura</span><div class="input-group"><input id="ttelesnatemperatura" type="text" class="form-control input-mini"><span class="input-group-addon">°C</span></div>
+						<span class="label label-default">Nasičenost krvi s kisikom</span><div class="input-group"><input id="tnasicenostkrvi" type="text" class="form-control input-mini"><span class="input-group-addon">%</span></div>
+						
+						<span id="Ehrajdi"></span>
+						<span id="ustvariSporocilo"></span>
+						
+						
+						
 				  	</div>
 
 				
-						<span class="label label-default">EHR ID</span><input id="meritveVitalnihZnakovEHRid" type="text" class="form-control input-mini" placeholder="7b661e12-3a98-21ad-c29e-2dc9f5a3d885">
-						<button type="button" class="btn btn-primary btn-xs" onclick="preberiMeritveVitalnihZnakov()">Prikaz Podatkov</button><span id="prikazPodatkov"></span>
+						<span class="label label-default">EHR ID</span><input id="tehrid" type="text" class="form-control input-mini">
+		        <button type="button" class="btn btn-primary btn-xs" onclick="preberiEHRzapis();narisiKrivuljo()">Prikaz Podatkov</button><span id="prikazPodatkov"></span>
 						<div id="rezultatMeritveVitalnihZnakov"></div>
 						<br>
 						<h2>Nasičenost krvi s kisikom</h2>
