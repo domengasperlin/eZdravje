@@ -22,6 +22,7 @@ function getSessionId() {
 }
 
 
+
 /**
  * Generator podatkov za novega pacienta, ki bo uporabljal aplikacijo. Pri
  * generiranju podatkov je potrebno najprej kreirati novega pacienta z
@@ -40,3 +41,22 @@ function generirajPodatke(stPacienta) {
 
 
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
+
+
+$( document ).ready(function() {
+ 
+// Create a new line chart object where as first parameter we pass in a selector
+// that is resolving to our chart container element. The Second parameter
+// is the actual data object. As a third parameter we pass in our custom options.
+new Chartist.Line('.ct-chart', {
+  labels: [0,'27','40','50',60,95,100],
+  series: [
+    [0,50,75,89,97,92,97],
+  ]
+}, {
+  fullWidth: true,
+  chartPadding: {
+    right: 40
+  }
+});
+});
