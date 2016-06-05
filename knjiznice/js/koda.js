@@ -6,6 +6,7 @@ var username = "ois.seminar";
 var password = "ois4fri";
 var string = "";//za izpis obvestil
 
+var stanje = 1;
 /**
  * Prijava v sistem z privzetim uporabnikom za predmet OIS in pridobitev
  * enolične ID številke za dostop do funkcionalnosti
@@ -140,6 +141,12 @@ function generateAll() {
 	for (var stevec = 1; stevec <= 3; stevec++) {
 		var trenutniId = generirajPodatke(stevec);
 	}
+			$("#time").val("");
+            $("#tpriimek").val("");
+            $("#tdatumrojstva").val("");
+            $("#ttelesnatemperatura").val("");
+            $("#tnasicenostkrvi").val("");
+	
 }
 
 function generirajPodatke(stPacienta) {//to pomeni piše v bazo
@@ -156,7 +163,7 @@ function generirajPodatke(stPacienta) {//to pomeni piše v bazo
 		priimek = "Bolan";
 		datumRojstva = "1975-03-03T01:30";
 		telesnaTemperatura = "39";
-		nasicenostKrvni = 97;
+		nasicenostKrvni = 89; 
 		generirajZelotkota();
         break;
     case 2:
@@ -164,7 +171,7 @@ function generirajPodatke(stPacienta) {//to pomeni piše v bazo
         priimek = "Bob";
         datumRojstva = "1975-03-03T01:30";
         telesnaTemperatura = "36";
-        nasicenostKrvni = 99;
+        nasicenostKrvni = 100;
         generirajBoba();
         break;
     case 3:
@@ -172,7 +179,7 @@ function generirajPodatke(stPacienta) {//to pomeni piše v bazo
         priimek = "Starina";
         datumRojstva = "1948-4-11T10:58";
         telesnaTemperatura = "37";
-        nasicenostKrvni = 98;
+        nasicenostKrvni = 94;
         generirajMicko();
         break;
         
@@ -325,7 +332,7 @@ function generirajZelotkota() {
 	var priimek = "Bolan";
 	var datumRojstva = "1975-03-03T01:30";
 	var telesnaTemperatura = "39";
-	var nasicenostKrvni = 97;
+	var nasicenostKrvni = 89;
 	izpolniTextbox(ime,priimek,datumRojstva,telesnaTemperatura,nasicenostKrvni);
  }
  function generirajBoba() {
@@ -341,7 +348,7 @@ function generirajZelotkota() {
 	var priimek = "Starina";
 	var datumRojstva = "1948-4-11T02:58";
 	var telesnaTemperatura = "37";
-	var nasicenostKrvni = 98;
+	var nasicenostKrvni = 94;
 	izpolniTextbox(ime,priimek,datumRojstva,telesnaTemperatura,nasicenostKrvni);
  }
 function narisiKrivuljo() {
@@ -363,6 +370,16 @@ function narisiKoncentracijoKisika() {
 	narisiCoolKrivuljo(vred);
 }
 function narisiCoolKrivuljo(procentiKisika) {
+	var nivo = "";
+	if (procentiKisika > 95) {
+		nivo = "veliko";
+	}
+	else if (procentiKisika < 95 && procentiKisika > 90) {
+		nivo = "podpovrečno"
+	}
+	else {
+		nivo = "premalo";
+	}
 var chart = new Chartist.Pie('.cxx-chart', 
     {
         series: [procentiKisika],
@@ -381,13 +398,13 @@ var chart = new Chartist.Pie('.cxx-chart',
                     offsetY : 10,
                     offsetX: -2
                 }, {
-                    content: '<h3>'+procentiKisika+'<span class="small">%kisika v krvi</span></h3>'
+                    content: '<h3>'+nivo+'</h3>'+" "+procentiKisika+'<span class="small">' + ' % kisika v krvi</span>'
                 }]
             })
         ],
     });
 
-chart.on('draw', function(data) {
+chart.on('draw', function(data) {//.ct-chart-donut barve
     if(data.type === 'slice' && data.index == 0) {
         // Get the total path length in order to use for dash array animation
         var pathLength = data.element._node.getTotalLength();
@@ -420,6 +437,22 @@ chart.on('draw', function(data) {
     }
 });
 }
+function premaloKisikaInfo() {
+	//http://www.mayoclinic.org/symptoms/hypoxemia/basics/definition/sym-20050930
+	if (stanje == 1) {
+		$("#nivoKisika").html("(Skrij) kakšen je normalen nivo kisika");
+        $("#master-detail").show();
+        stanje = stanje*(-1);
+		}else {
+		$("#nivoKisika").html("(Pokaži) kakšen je normalen nivo kisika");
+        $("#master-detail").hide();
+        stanje = stanje*(-1);
+		}
+}
+function narisiTelesnoTemperaturo() {
+	var kokTemperature = $("#ttelesnatemperatura").val();
+	narisiZzahtevanoviz(kokTemperature);
+}
  function izpolniTextbox(ime,priimek,datumRojstva,telesnaTemperatura,nasicenostKrvni) {
     		$("#time").val(ime);
             $("#tpriimek").val(priimek);
@@ -427,12 +460,39 @@ chart.on('draw', function(data) {
             $("#ttelesnatemperatura").val(telesnaTemperatura);
             $("#tnasicenostkrvi").val(nasicenostKrvni);
  }
+ function narisiZzahtevanoviz(temperaturaParameter) {
+ var dt = new DashTimer('#timer').init().setData([{
+  immediate: {
+    angle: true
+  },
+  start: {
+    angle: 1,
+    fill: '#eee'
+  },
+  finish: {
+    angle: 0,
+    fill: '#eee'
+  }
+}, {
+  values: {
+    show: true
+  },
+  start: {
+    value:0
+  },
+  finish: {
+    value:temperaturaParameter
+  }
+}]).start(2000);
+
+ }
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
-$( document ).ready(function() {
- narisiKrivuljo();
- 
+$(document).ready(function() {
+// narisiKrivuljo();
+	$("#nivoKisika").html("(Pokaži) kakšen je normalen nivo kisika");
+	$("#master-detail").html("<p>Hypoxemia is a below-normal level of oxygen in your blood, specifically in the arteries. Hypoxemia is a sign of a problem related to breathing or circulation, and may result in various symptoms, such as shortness of breath. Hypoxemia is determined by measuring the oxygen level in a blood sample taken from an artery (arterial blood gas). It can also be estimated by measuring the oxygen saturation of your blood using a pulse oximeter — a small device that clips to your finger. Normal arterial oxygen is approximately 75 to 100 millimeters of mercury (mm Hg). Values under 60 mm Hg usually indicate the need for supplemental oxygen. Normal pulse oximeter readings usually range from 95 to 100 percent. Values under 90 percent are considered low.</p>");
+	$("#master-detail").hide();
 // Create a new line chart object where as first parameter we pass in a selector
 // that is resolving to our chart container element. The Second parameter
 // is the actual data object. As a third parameter we pass in our custom options.
-
 });

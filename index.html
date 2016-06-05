@@ -13,6 +13,13 @@
   <script src="knjiznice/js/koda.js"></script>
   <script src="knjiznice/js/chartist.js"></script>
   <script src="knjiznice/js/chartist-plugin-fill-donut.js"></script>
+  <script src="d3js.org/d3.v3.min.js"></script>
+  <script src="knjiznice/js/dashtimer.js"></script>
+  <link href="cdn.muicss.com/mui-0.5.1/css/mui.min.css" rel="stylesheet" type="text/css" />
+<script src="cdn.muicss.com/mui-0.5.1/js/mui.min.js"></script>
+<script src="cdnjs.cloudflare.com/ajax/libs/es6-promise/3.2.1/es6-promise.min.js"></script>
+<script src="knjiznice/js/d3.js" charset="utf-8"></script>
+
   
 </head>
 <body>
@@ -64,26 +71,31 @@
 						<span class="label label-info">Datum rojstva</span><input id="tdatumrojstva" type="text" class="form-control"> <!-- placeholder="1957-03-10T09:08">//1917-04-10T10:09 -->
 						<span class="label label-info">Telesna temperatura</span><div class="input-group"><input id="ttelesnatemperatura" type="text" class="form-control input-mini"><span class="input-group-addon">°C</span></div>
 						<span class="label label-info">Nasičenost krvi s kisikom</span><div class="input-group"><input id="tnasicenostkrvi" type="text" class="form-control input-mini"><span class="input-group-addon">%</span></div>
-						<button type="button" class="btn btn-success btn-xs" onclick="narisiKoncentracijoKisika()">Prikaz Podatkov</button><span id="prikazPodatkov"></span>
+						<button type="button" class="btn btn-success btn-xs" onclick="narisiKoncentracijoKisika();narisiTelesnoTemperaturo()">Prikaz Podatkov</button><span id="prikazPodatkov"></span>
 						<span id="Ehrajdi"></span>
 						<span id="ustvariSporocilo"></span>
 				  	</div>
 						<span class="label label-info">EHR ID</span><input id="tehrid" type="text" class="form-control input-mini">
-		        <button type="button" class="btn btn-success btn-xs" onclick="preberiEHRzapis();narisiKoncentracijoKisika()">Prikaz Podatkov</button><span id="prikazPodatkov"></span>
+		        <button type="button" class="btn btn-success btn-xs" onclick="preberiEHRzapis();narisiKoncentracijoKisika();narisiTelesnoTemperaturo()">Prikaz Podatkov</button><span id="prikazPodatkov"></span>
 			<!--			<div id="rezultatMeritveVitalnihZnakov"></div>  -->
 						<br>
 						 <div class="cxx-chart ct-perfect-fourth"></div>	
 						<br>
-						<h2>Nasičenost krvi s kisikom</h2>
-						<div> Oxyhemoglobin (%Saturation) </div>
-						<div class="ct-chart ct-perfect-fourth"></div>
-						PO2 (mmHg)
-										  	<button type="button" class="btn btn-success btn-xs" onclick="preberiEHRzapis();narisiKoncentracijoKisika()">Podroben prikaz PO2 vrednosti</button><span id="prikazPodatkov"></span>
+						<img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Oxyhaemoglobin_dissociation_curve.png"/>
+						<br>
+						 	<button type="button" id="nivoKisika"class="btn btn-success btn-xs" onclick="premaloKisikaInfo()">Kakšen je normalen nivo kisika</button><span id="prikazPodatkov"></span>
+							<div id="master-detail"></div>
+							<br>
+										 
+					<h2>Telesna temperatura<br></h2>
+				  <span id="timer"></span>
+				  <br>
+				  	<a class="twitter-timeline" href="https://twitter.com/hashtag/hemoglobin" data-widget-id="739223238614585345">#hemoglobin Tweets</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+				  	
 				  	</div>
 
 				  							
-				  	<a class="twitter-timeline" href="https://twitter.com/hashtag/hemoglobin" data-widget-id="739223238614585345">#hemoglobin Tweets</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 				  	
 				  	
 				 
